@@ -448,7 +448,7 @@ def save_category(username, category_type, category_name):
         df = pd.DataFrame(columns=["Username", "CategoryType", "CategoryName"])
         df.to_csv(CATEGORY_FILE, index=False)
 
-    df = pd.read_csv(CATEGORY_FILE)
+    df = pd.read_csv(DATA_FILE) # Read from DATA_FILE to check existing categories
     if not ((df['Username'] == username) & (df['CategoryName'] == category_name)).any():
         new_category = pd.DataFrame([{
             "Username": username,
@@ -562,9 +562,10 @@ def bottom_navbar():
                 if st.button(icon, key=f"nav_btn_{page}", help=page):
                     st.session_state.active_page = page
                     st.experimental_rerun()
+                # Applying CSS for the plus button
                 st.markdown(f"""
                     <style>
-                        div[data-testid="stColumn"] > div > div > button[data-testid="stButton"] {{
+                        div[data-testid="stColumn"]:nth-child({i+1}) button[data-testid="stButton"] {{
                             font-size: 32px !important;
                             color: white !important;
                             background: #2196F3 !important;
@@ -580,18 +581,20 @@ def bottom_navbar():
                             align-items: center !important;
                             margin-top: -30px !important; /* Pull up to float */
                         }}
-                        div[data-testid="stColumn"] > div > div > button[data-testid="stButton"]:hover {{
+                        div[data-testid="stColumn"]:nth-child({i+1}) button[data-testid="stButton"]:hover {{
                             background: #1976D2 !important;
                         }}
                     </style>
                 """, unsafe_allow_html=True)
             else:
                 # Regular navigation buttons
-                active_class = "active-nav-item" if st.session_state.active_page == page else ""
+                # The text and icon are passed together in the button label
+                # The active state is handled by setting the color dynamically in the CSS
                 if st.button(f"<span class='icon'>{icon}</span> {page}", key=f"nav_btn_{page}", help=page, unsafe_allow_html=True):
                     st.session_state.active_page = page
                     st.experimental_rerun()
-                # Apply active class via CSS
+                
+                # Apply CSS for the regular nav items
                 st.markdown(f"""
                     <style>
                         div[data-testid="stColumn"]:nth-child({i+1}) button {{
@@ -600,7 +603,7 @@ def bottom_navbar():
                             padding: 0 !important;
                             margin: 0 !important;
                             box-shadow: none !important;
-                            color: #555 !important;
+                            color: {'#2196F3' if st.session_state.active_page == page else '#555'} !important; /* Dynamic color based on active_page */
                             font-size: 0.8em !important;
                             font-weight: 600 !important;
                             transition: color 0.3s ease !important;
@@ -613,9 +616,6 @@ def bottom_navbar():
                         }}
                         div[data-testid="stColumn"]:nth-child({i+1}) button:hover {{
                             color: #2196F3 !important;
-                        }}
-                        div[data-testid="stColumn"]:nth-child({i+1}) button.stButton {{ /* Target the actual button element */
-                            color: {'#2196F3' if st.session_state.active_page == page else '#555'} !important;
                         }}
                         div[data-testid="stColumn"]:nth-child({i+1}) button > div {{ /* Target the inner div containing icon and text */
                             display: flex;
@@ -710,10 +710,10 @@ def dashboard():
 
         # Basic icon mapping for categories (can be expanded)
         category_icons = {
-            "Food": "🍔", "Transport": "🚗", "Rent": "🏠", "Utilities": "�",
+            "Food": "🍔", "Transport": "🚗", "Rent": "🏠", "Utilities": "💡",
             "Shopping": "🛍️", "Entertainment": "🎬", "Health": "🏥", "Education": "📚",
             "Salary": "💰", "Freelance": "💼", "Investment": "📈", "Gift": "🎁",
-            "Personal Loan": "💳", "Home Loan": "🏡", "Car Loan": "🚗", "Student Loan": "🎓",
+            "Personal Loan": "💳", "Home Loan": "🏡", "Car Loan": "🚗", "Student Loan": "�",
             "Loan Repayment": "💸", "Credit Card Bill": "💳",
             "Other Income": "➕", "Other Expense": "➖", "Other Loan": "🤝", "Other EMI": "🔄"
         }
