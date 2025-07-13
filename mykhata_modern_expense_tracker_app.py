@@ -713,7 +713,7 @@ def dashboard():
             "Food": "🍔", "Transport": "🚗", "Rent": "🏠", "Utilities": "💡",
             "Shopping": "🛍️", "Entertainment": "🎬", "Health": "🏥", "Education": "📚",
             "Salary": "💰", "Freelance": "💼", "Investment": "📈", "Gift": "🎁",
-            "Personal Loan": "💳", "Home Loan": "�", "Car Loan": "🚗", "Student Loan": "🎓",
+            "Personal Loan": "💳", "Home Loan": "🏡", "Car Loan": "🚗", "Student Loan": "🎓",
             "Loan Repayment": "💸", "Credit Card Bill": "💳",
             "Other Income": "➕", "Other Expense": "➖", "Other Loan": "🤝", "Other EMI": "🔄"
         }
@@ -1123,4 +1123,3 @@ if not st.session_state.logged_in:
         login_page()
 else:
     main_app()
-�
