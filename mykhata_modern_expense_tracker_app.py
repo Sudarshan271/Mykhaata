@@ -10,9 +10,11 @@ def install_packages():
             __import__(package)
         except ImportError:
             print(f"Installing {package}...")
-            subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+            # Use --break-system-packages for environments like Colab if needed
+            subprocess.check_call([sys.executable, "-m", "pip", "install", package, "--break-system-packages"])
             print(f"{package} installed successfully.")
 
+# Call the installation function at the very beginning
 install_packages()
 
 import streamlit as st
@@ -619,7 +621,7 @@ def dashboard():
 
         # Basic icon mapping for categories (can be expanded)
         category_icons = {
-            "Food": "🍔", "Transport": "🚗", "Rent": "🏠", "Utilities": "�",
+            "Food": "🍔", "Transport": "🚗", "Rent": "🏠", "Utilities": "💡",
             "Shopping": "🛍️", "Entertainment": "🎬", "Health": "🏥", "Education": "📚",
             "Salary": "💰", "Freelance": "💼", "Investment": "📈", "Gift": "🎁",
             "Personal Loan": "💳", "Home Loan": "🏡", "Car Loan": "🚗", "Student Loan": "🎓",
@@ -644,7 +646,7 @@ def dashboard():
                 <div class="icon-circle">{icon}</div>
                 <div class="details">
                     <div class="category-name">{row['Category']}</div>
-                    <div class="note-date">{row['Note']} - {pd.to_datetime(row['Date']).strftime('%d %b')}</div>
+                    <div class="note-date">{pd.to_datetime(row['Date']).strftime('%d %b')} - {row['Note']}</div>
                 </div>
                 <div class="amount-display {amount_class}">
                     ₹ {row['Amount']:,.2f}
@@ -1032,4 +1034,3 @@ if not st.session_state.logged_in:
         login_page()
 else:
     main_app()
-�
