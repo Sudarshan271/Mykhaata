@@ -216,11 +216,7 @@ st.markdown("""
         margin: 0;
         color: #333;
     }
-    .section-header .filter-icon {
-        font-size: 24px;
-        cursor: pointer;
-        color: #555;
-    }
+    /* Removed filter-icon styling as it's removed from HTML */
 
 
     /* Bottom Navigation Bar Styling */
@@ -239,40 +235,77 @@ st.markdown("""
         border-top-left-radius: 20px;
         border-top-right-radius: 20px;
     }
-    .nav-item {
+    .nav-button-container {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+    }
+    .nav-button-wrapper {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .nav-button-wrapper button {
+        background: none !important;
+        border: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+        color: #555 !important;
+        font-size: 0.8em !important;
+        font-weight: 600 !important;
+        transition: color 0.3s ease !important;
+        height: auto !important;
+        width: auto !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        cursor: pointer !important;
+    }
+    .nav-button-wrapper button:hover {
+        color: #2196F3 !important;
+    }
+    .nav-button-wrapper button > div { /* Target the inner div containing icon and text */
         display: flex;
         flex-direction: column;
         align-items: center;
-        cursor: pointer;
-        color: #555;
-        font-size: 0.8em;
-        font-weight: 600;
-        transition: color 0.3s ease;
-        padding: 5px; /* Add padding for better touch target */
     }
-    .nav-item:hover {
-        color: #2196F3;
+    .nav-button-wrapper button .icon {
+        font-size: 24px !important;
+        margin-bottom: 3px !important;
     }
-    .nav-item .icon {
-        font-size: 24px;
-        margin-bottom: 3px;
+    .nav-button-wrapper button.active-nav-item {
+        color: #2196F3 !important; /* Active state color */
     }
-    .plus-btn {
-        font-size: 32px; /* Larger plus icon */
-        color: white;
-        background: #2196F3; /* Bright blue for add button */
-        border-radius: 50%;
-        width: 60px; /* Larger circle */
-        height: 60px;
-        line-height: 60px;
-        text-align: center;
+
+    .plus-btn-wrapper {
+        flex: 0 0 auto; /* Don't grow or shrink */
+        display: flex;
+        justify-content: center;
+        align-items: center;
         margin-top: -30px; /* Pull up to float */
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        transition: background 0.3s ease;
+        z-index: 1001; /* Ensure it's above other nav items */
     }
-    .plus-btn:hover {
-        background: #1976D2;
+    .plus-btn-wrapper button {
+        font-size: 32px !important; /* Larger plus icon */
+        color: white !important;
+        background: #2196F3 !important; /* Bright blue for add button */
+        border-radius: 50% !important;
+        width: 60px !important; /* Larger circle */
+        height: 60px !important;
+        line-height: 60px !important;
+        text-align: center !important;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2) !important;
+        transition: background 0.3s ease !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
     }
+    .plus-btn-wrapper button:hover {
+        background: #1976D2 !important;
+    }
+
 
     /* Hide hamburger menu (sidebar toggle) */
     .css-1lcbmhc {
@@ -510,37 +543,94 @@ def signup_page():
 
 # --- Navigation Bar ---
 def bottom_navbar():
-    # JavaScript to update query params without full page reload
-    js = """
-    <script>
-        function navigate(page) {
-            const urlParams = new URLSearchParams(window.location.search);
-            urlParams.set('nav', page);
-            window.location.search = urlParams.toString();
-        }
-    </script>
-    """
-    st.markdown(js, unsafe_allow_html=True)
+    # Use st.columns for horizontal layout of buttons
+    st.markdown('<div class="bottom-bar">', unsafe_allow_html=True)
+    cols = st.columns([1, 1, 1, 1, 1]) # 5 columns for 5 buttons
 
-    st.markdown(f"""
-    <div class="bottom-bar">
-        <div onclick="navigate('Home')" class="nav-item">
-            <span class="icon">🏠</span> Home
-        </div>
-        <div onclick="navigate('Wallet')" class="nav-item">
-            <span class="icon">📈</span> Wallet
-        </div>
-        <div onclick="navigate('Add')" class="plus-btn">
-            +
-        </div>
-        <div onclick="navigate('Report')" class="nav-item">
-            <span class="icon">📊</span> Report
-        </div>
-        <div onclick="navigate('Profile')" class="nav-item">
-            <span class="icon">👤</span> Profile
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+    nav_items = [
+        ("Home", "🏠"),
+        ("Wallet", "📈"),
+        ("Add", "+"), # Plus button is special
+        ("Report", "📊"),
+        ("Profile", "👤")
+    ]
+
+    for i, (page, icon) in enumerate(nav_items):
+        with cols[i]:
+            if page == "Add":
+                # Special styling for the Add button
+                if st.button(icon, key=f"nav_btn_{page}", help=page):
+                    st.session_state.active_page = page
+                    st.experimental_rerun()
+                st.markdown(f"""
+                    <style>
+                        div[data-testid="stColumn"] > div > div > button[data-testid="stButton"] {{
+                            font-size: 32px !important;
+                            color: white !important;
+                            background: #2196F3 !important;
+                            border-radius: 50% !important;
+                            width: 60px !important;
+                            height: 60px !important;
+                            line-height: 60px !important;
+                            text-align: center !important;
+                            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2) !important;
+                            transition: background 0.3s ease !important;
+                            display: flex !important;
+                            justify-content: center !important;
+                            align-items: center !important;
+                            margin-top: -30px !important; /* Pull up to float */
+                        }}
+                        div[data-testid="stColumn"] > div > div > button[data-testid="stButton"]:hover {{
+                            background: #1976D2 !important;
+                        }}
+                    </style>
+                """, unsafe_allow_html=True)
+            else:
+                # Regular navigation buttons
+                active_class = "active-nav-item" if st.session_state.active_page == page else ""
+                if st.button(f"<span class='icon'>{icon}</span> {page}", key=f"nav_btn_{page}", help=page, unsafe_allow_html=True):
+                    st.session_state.active_page = page
+                    st.experimental_rerun()
+                # Apply active class via CSS
+                st.markdown(f"""
+                    <style>
+                        div[data-testid="stColumn"]:nth-child({i+1}) button {{
+                            background: none !important;
+                            border: none !important;
+                            padding: 0 !important;
+                            margin: 0 !important;
+                            box-shadow: none !important;
+                            color: #555 !important;
+                            font-size: 0.8em !important;
+                            font-weight: 600 !important;
+                            transition: color 0.3s ease !important;
+                            height: auto !important;
+                            width: auto !important;
+                            display: flex !important;
+                            flex-direction: column !important;
+                            align-items: center !important;
+                            cursor: pointer !important;
+                        }}
+                        div[data-testid="stColumn"]:nth-child({i+1}) button:hover {{
+                            color: #2196F3 !important;
+                        }}
+                        div[data-testid="stColumn"]:nth-child({i+1}) button.stButton {{ /* Target the actual button element */
+                            color: {'#2196F3' if st.session_state.active_page == page else '#555'} !important;
+                        }}
+                        div[data-testid="stColumn"]:nth-child({i+1}) button > div {{ /* Target the inner div containing icon and text */
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                        }}
+                        div[data-testid="stColumn"]:nth-child({i+1}) button .icon {{
+                            font-size: 24px !important;
+                            margin-bottom: 3px !important;
+                        }}
+                    </style>
+                """, unsafe_allow_html=True)
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
 
 # --- Pages ---
 
@@ -611,9 +701,8 @@ def dashboard():
     st.markdown("""
     <div class="section-header">
         <h3>Transaction</h3>
-        <span class="filter-icon">⚙️</span> <!-- Placeholder for filter icon -->
     </div>
-    """, unsafe_allow_html=True)
+    """, unsafe_allow_html=True) # Removed filter icon as it was not functional
 
     if not user_transactions.empty:
         # Sort by date descending for latest transactions first
@@ -624,7 +713,7 @@ def dashboard():
             "Food": "🍔", "Transport": "🚗", "Rent": "🏠", "Utilities": "💡",
             "Shopping": "🛍️", "Entertainment": "🎬", "Health": "🏥", "Education": "📚",
             "Salary": "💰", "Freelance": "💼", "Investment": "📈", "Gift": "🎁",
-            "Personal Loan": "💳", "Home Loan": "🏡", "Car Loan": "🚗", "Student Loan": "🎓",
+            "Personal Loan": "💳", "Home Loan": "🏡", "Car Loan": "�", "Student Loan": "🎓",
             "Loan Repayment": "💸", "Credit Card Bill": "💳",
             "Other Income": "➕", "Other Expense": "➖", "Other Loan": "🤝", "Other EMI": "🔄"
         }
@@ -1034,3 +1123,4 @@ if not st.session_state.logged_in:
         login_page()
 else:
     main_app()
+�
