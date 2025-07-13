@@ -448,7 +448,7 @@ def save_category(username, category_type, category_name):
         df = pd.DataFrame(columns=["Username", "CategoryType", "CategoryName"])
         df.to_csv(CATEGORY_FILE, index=False)
 
-    df = pd.read_csv(DATA_FILE) # Read from DATA_FILE to check existing categories
+    df = pd.read_csv(CATEGORY_FILE) # Read from CATEGORY_FILE to check existing categories
     if not ((df['Username'] == username) & (df['CategoryName'] == category_name)).any():
         new_category = pd.DataFrame([{
             "Username": username,
@@ -711,9 +711,9 @@ def dashboard():
         # Basic icon mapping for categories (can be expanded)
         category_icons = {
             "Food": "🍔", "Transport": "🚗", "Rent": "🏠", "Utilities": "💡",
-            "Shopping": "🛍️", "Entertainment": "🎬", "Health": "🏥", "Education": "�",
+            "Shopping": "🛍️", "Entertainment": "🎬", "Health": "🏥", "Education": "📚",
             "Salary": "💰", "Freelance": "💼", "Investment": "📈", "Gift": "🎁",
-            "Personal Loan": "💳", "Home Loan": "🏡", "Car Loan": "🚗", "Student Loan": "🎓",
+            "Personal Loan": "💳", "Home Loan": "�", "Car Loan": "🚗", "Student Loan": "🎓",
             "Loan Repayment": "💸", "Credit Card Bill": "💳",
             "Other Income": "➕", "Other Expense": "➖", "Other Loan": "🤝", "Other EMI": "🔄"
         }
