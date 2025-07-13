@@ -711,9 +711,9 @@ def dashboard():
         # Basic icon mapping for categories (can be expanded)
         category_icons = {
             "Food": "🍔", "Transport": "🚗", "Rent": "🏠", "Utilities": "💡",
-            "Shopping": "🛍️", "Entertainment": "🎬", "Health": "🏥", "Education": "📚",
+            "Shopping": "🛍️", "Entertainment": "🎬", "Health": "🏥", "Education": "�",
             "Salary": "💰", "Freelance": "💼", "Investment": "📈", "Gift": "🎁",
-            "Personal Loan": "💳", "Home Loan": "🏡", "Car Loan": "🚗", "Student Loan": "�",
+            "Personal Loan": "💳", "Home Loan": "🏡", "Car Loan": "🚗", "Student Loan": "🎓",
             "Loan Repayment": "💸", "Credit Card Bill": "💳",
             "Other Income": "➕", "Other Expense": "➖", "Other Loan": "🤝", "Other EMI": "🔄"
         }
